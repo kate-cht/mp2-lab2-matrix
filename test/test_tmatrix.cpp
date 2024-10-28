@@ -210,16 +210,19 @@ TEST(TDynamicMatrix, cant_multiply_matrices_with_not_equal_size)
 
 TEST(TDynamicMatrix, can_multiply_matrices_with_equal_size)
 {
-	TDynamicMatrix<int> m(2);
-	TDynamicMatrix<int> m1(2);
-	TDynamicMatrix<int> res(2);
-	int* arr = new int[2] { 1, 1 };
-	delete[] arr;
-	TDynamicVector<int> temp1(arr, 2);
-	m[0] = temp1 * 2;
-	res[0] = temp1 * 4;
-	m1[0] = m1[1] = temp1;
-	res[1] = m[1] = temp1 * 0;
-	EXPECT_EQ(m*m1, res);
+	TDynamicMatrix<int> m1(5);
+	TDynamicMatrix<int> m2(5);
+	int* arr1 = new int[5] { 2, 2, 3, 4, 5 };
+	int* arr2 = new int[5] { 1, 0, 0, 1, 1 };
+	TDynamicVector<int> v1(arr1, 5);
+	TDynamicVector<int> v2(arr2, 5);
+	delete[] arr1;
+	delete[] arr2;
+	m1[0] = v1;
+	m2[0] = v2;
+	TDynamicMatrix<int> res(5);
+	res[0] = v2 * 2;
+
+	EXPECT_EQ(res, m1 * m2);
 
 }
