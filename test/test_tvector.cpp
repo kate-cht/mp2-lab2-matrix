@@ -66,10 +66,11 @@ TEST(TDynamicVector, throws_when_set_element_with_too_large_index)
 	ASSERT_ANY_THROW(v.at(5) = 3);
 }
 
-TEST(TDynamicVector, can_assign_vector_to_itself)
+TEST(TDynamicVector, can_assign_vector_to_itself) // исправлено
 {
 	TDynamicVector<int> v(5);
-	EXPECT_EQ(v = v, v);
+	TDynamicVector<int> vc = v;
+	EXPECT_EQ(vc, v);
 }
 
 TEST(TDynamicVector, can_assign_vectors_of_equal_size)
@@ -137,11 +138,12 @@ TEST(TDynamicVector, can_subtract_scalar_from_vector)
 	EXPECT_EQ(v1, v2);
 }
 
-TEST(TDynamicVector, can_multiply_scalar_by_vector)
+TEST(TDynamicVector, can_multiply_scalar_by_vector) // исправлено
 {
-	TDynamicVector<int> v1(5);
-	TDynamicVector<int> v2(5);
-	v1 * 3;
+	int* arr = new int[5] { 5, 5, 5, 5, 5 };
+	TDynamicVector<int> v2(arr, 5), v1(arr, 5);
+	delete[] arr;
+	v1 = v1 * 3;
 	for (int i = 0; i < 5; i++)
 		v2[i] *= 3;
 	EXPECT_EQ(v1, v2);

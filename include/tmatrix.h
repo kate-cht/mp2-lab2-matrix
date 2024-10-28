@@ -84,11 +84,11 @@ public:
   size_t size() const noexcept { return sz; }
 
   // индексация
-  T& operator[](size_t ind) // без проверок
+  T& operator[](size_t ind) 
   {
       return pMem[ind];
   }
-  const T& operator[](size_t ind) const // с проверками, не меняет элементы массива
+  const T& operator[](size_t ind) const 
   {
       return pMem[ind];
   }
@@ -160,7 +160,7 @@ public:
       if (sz != v.sz)
           throw logic_error("vectors have different lengths");
       TDynamicVector<T> res(*this);
-      for (int i = 0; i < sz; i++)
+      for (size_t i = 0; i < sz; i++)
           res.pMem[i] -= v.pMem[i];
       return res;
   }
@@ -169,7 +169,7 @@ public:
       if (sz != v.sz)
           throw logic_error("vectors have different lengths");
       T res = T();
-      for (int i = 0; i < sz; i++)
+      for (size_t i = 0; i < sz; i++)
           res += pMem[i] * v.pMem[i];
       return res;
   }
@@ -222,7 +222,7 @@ public:
       if (sz != m.sz)
           return 0;
       else
-          for (int i = 0; i < sz; i++)
+          for (size_t i = 0; i < sz; i++)
               if (pMem[i] != m.pMem[i])
                   return 0;
       return 1;
@@ -234,21 +234,21 @@ public:
   }
 
   // матрично-скалярные операции
-  TDynamicMatrix operator*(const T& val) // на паре
+  TDynamicMatrix operator*(const T& val)
   {
       TDynamicMatrix res(sz);
-      for (int i = 0; i < sz; i++)
+      for (size_t i = 0; i < sz; i++)
           res[i] = pMem[i] * val; 
       return res;
   } 
 
   // матрично-векторные операции
-  TDynamicVector<T> operator*(const TDynamicVector<T>& v) // на паре
+  TDynamicVector<T> operator*(const TDynamicVector<T>& v) 
   {   
-      if (sz != v.sz)
+      if (sz != v.size())
           throw logic_error("different lengths");
       TDynamicVector<T> res(sz);
-      for (int i = 0; i < sz; i++)
+      for (size_t i = 0; i < sz; i++)
           res[i] = pMem[i] * v;
       return res;
 
@@ -273,16 +273,18 @@ public:
           res.pMem[i] = pMem[i] - m.pMem[i];
       return res;
   }
+
   TDynamicMatrix operator*(const TDynamicMatrix& m)
   {
       if (sz != m.sz)
-          throw logic_error("different lengths");
+          throw logic_error("Matrices should be the same size");
       TDynamicMatrix res(sz);
       size_t pMemSize = pMem[0].size();
       TDynamicVector<T> tmp(pMemSize);
-      for (int i = 0; i < sz; i++)
-          for (int j = 0; j < pMemSize; j++) {
-              for (int k = 0; k < pMemSize; j++)
+      for (size_t i = 0; i < sz; i++)
+          for (size_t j = 0; j < pMemSize; j++)
+          {
+              for (size_t k = 0; k < pMemSize; k++)
                   tmp[k] = m.pMem[k][j];
               res[i][j] += pMem[i] * tmp;
           }

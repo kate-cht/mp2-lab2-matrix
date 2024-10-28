@@ -53,23 +53,30 @@ TEST(TDynamicMatrix, can_set_and_get_element)
 	EXPECT_EQ(m[1], v);
 }
 
-TEST(TDynamicMatrix, throws_when_set_element_with_negative_index)
+TEST(TDynamicMatrix, throws_when_set_element_with_negative_index) // исправлено
 {
 	TDynamicMatrix<int> m(5);
-	ASSERT_ANY_THROW(m.at(-1).at(1) = 3);
+	int* arr = new int[5] { 5, 5, 5, 5, 5 };
+	TDynamicVector<int> v(arr, 5);
+	delete[] arr;
+	ASSERT_ANY_THROW(m.at(-1) = v);
 
 }
 
-TEST(TDynamicMatrix, throws_when_set_element_with_too_large_index)
+TEST(TDynamicMatrix, throws_when_set_element_with_too_large_index) // исправлено
 {
 	TDynamicMatrix<int> m(5);
-	ASSERT_ANY_THROW(m.at(5).at(1) = 3);
+	int* arr = new int[5] { 5, 5, 5, 5, 5 };
+	TDynamicVector<int> v(arr, 5);
+	delete[] arr;
+	ASSERT_ANY_THROW(m.at(7) = v);
 }
 
-TEST(TDynamicMatrix, can_assign_matrix_to_itself)
+TEST(TDynamicMatrix, can_assign_matrix_to_itself) // исправлено
 {
 	TDynamicMatrix<int> m(5);
-	EXPECT_EQ(m = m, m);
+	TDynamicMatrix<int> mc = m;
+	EXPECT_EQ(mc, m);
 }
 
 TEST(TDynamicMatrix, can_assign_matrices_of_equal_size)
@@ -154,3 +161,65 @@ TEST(TDynamicMatrix, cant_subtract_matrixes_with_not_equal_size)
 	ASSERT_ANY_THROW(m1 - m2);
 }
 
+// добавлено
+
+TEST(TDynamicMatrix, can_multiply_matrices_with_scalar) 
+{
+	TDynamicMatrix<int> m1(3);
+	TDynamicMatrix<int> m2(3);
+	m1[0][0] = m1[1][1] = 3;
+	m2[0][0] = m2[1][1] = 1;
+	EXPECT_EQ(m2*3, m1);
+}
+
+TEST(TDynamicMatrix, can_multiply_matrices_with_vector_equal_size)
+{
+	TDynamicMatrix<int> m(3);
+
+	int* arr = new int[3] { 1,1,1 };
+	TDynamicVector<int> v(arr, 3);
+	m[0] = v;
+	delete[] arr; 
+
+	int* arr1 = new int[3] { 3, 0, 0 };
+	TDynamicVector<int> res(arr1, 3);
+	delete[] arr1;
+
+	int* arr2 = new int[3] { 0, 0, 0 };
+	TDynamicVector<int> temp(arr2, 3);
+	m[1] = m[2] = temp;
+	delete[] arr2;
+
+	EXPECT_EQ(m*v, res);
+}
+
+TEST(TDynamicMatrix, cant_multiply_matrices_with_vector_not_equal_size)
+{
+	TDynamicMatrix<int> m(5);
+	TDynamicVector<int> v(7);
+	ASSERT_ANY_THROW(m * v);
+}
+
+TEST(TDynamicMatrix, cant_multiply_matrices_with_not_equal_size)
+{
+	TDynamicMatrix<int> m1(5);
+	TDynamicMatrix<int> m2(7);
+	ASSERT_ANY_THROW(m1 * m2);
+}
+
+
+TEST(TDynamicMatrix, can_multiply_matrices_with_equal_size)
+{
+	TDynamicMatrix<int> m(2);
+	TDynamicMatrix<int> m1(2);
+	TDynamicMatrix<int> res(2);
+	int* arr = new int[2] { 1, 1 };
+	delete[] arr;
+	TDynamicVector<int> temp1(arr, 2);
+	m[0] = temp1 * 2;
+	res[0] = temp1 * 4;
+	m1[0] = m1[1] = temp1;
+	res[1] = m[1] = temp1 * 0;
+	EXPECT_EQ(m*m1, res);
+
+}
