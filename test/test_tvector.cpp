@@ -7,50 +7,48 @@ class TestTVector :public::testing::Test
 {
 protected:
 	T *arr_norm, *arr_v0, *arr_v1, *arr_sub, *arr_add;
-	TDynamicVector<T> *norm, *v1, *v0, *sub, *add, *vect;
+	TDynamicVector<T> *norm, *v1, *v0, *sub, *add, *vect, *vect1;
 public:
 	void SetUp() {
-		this->arr_norm = new T[3]{ 1, 1, 1 };
-		this->norm = new TDynamicVector<T>(arr_norm, 3);
+		arr_norm = new T[3]{ 1, 1, 1 };
+		norm = new TDynamicVector<T>(arr_norm, 3);
 
-		this->arr_v0 = new T[3]{ 1, 2, 3 };
-		this->v0 = new TDynamicVector<T>(arr_v0, 3);
+		arr_v0 = new T[3]{ 1, 2, 3 };
+		v0 = new TDynamicVector<T>(arr_v0, 3);
 
-		this->arr_v1 = new T[5]{ 1, 2, 3, 4, 5 };
-		this->v1 = new TDynamicVector<T>(arr_v1, 5);
+		arr_v1 = new T[5]{ 1, 2, 3, 4, 5 };
+		v1 = new TDynamicVector<T>(arr_v1, 5);
 
-		this->arr_add = new T[3]{ 2, 3, 4 };
-		this->add = new TDynamicVector<T>(arr_add, 3);
-		this->arr_sub = new T[3]{ 0, 1, 2 };
-		this->sub = new TDynamicVector<T>(arr_sub, 3);
+		arr_add = new T[3]{ 2, 3, 4 };
+		add = new TDynamicVector<T>(arr_add, 3);
+		arr_sub = new T[3]{ 0, 1, 2 };
+		sub = new TDynamicVector<T>(arr_sub, 3);
 
 	}
 	void TearDown()
 	{
-		delete[] this->arr_norm;
-		delete[] this->arr_v1;
-		delete[] this->arr_v0;
-		delete[] this->arr_sub;
-		delete[] this->arr_add;
+		delete[] arr_norm;
+		arr_norm = nullptr;
+		delete[] arr_v1;
+		arr_v1 = nullptr;
+		delete[] arr_v0;
+		arr_v0 = nullptr;
+		delete[] arr_sub;
+		arr_sub = nullptr;
+		delete[] arr_add;
+		arr_add = nullptr;
 
-		this->arr_v1 = nullptr;
-		this->arr_v0 = nullptr;
-		this->arr_norm = nullptr;
-		this->arr_add = nullptr;
-		this->arr_sub = nullptr;
-		delete this->vect;
-		delete this->v0;
-		delete this->v1;
-		delete this->norm;
-		delete this->add;
-		delete this->sub;
+		delete v0;
+		delete v1;
+		delete norm;
+		delete add;
+		delete sub;
 
 	}
 	void CreateVector(size_t size = 1)
 	{
-		if (size == 1 || size == 5)
-			this->vect = new TDynamicVector<T>(*v1);
-		else this->vect = new TDynamicVector<T>(size);
+		vect1 = new TDynamicVector<T>(*v1);
+		vect = new TDynamicVector<T>(size);
 	}
 	
 };
@@ -61,19 +59,17 @@ TYPED_TEST_CASE(TestTVector, types);
 
 TYPED_TEST(TestTVector, can_create_vector_with_positive_length)
 {
-	ASSERT_NO_THROW(this -> CreateVector(5));
+	ASSERT_NO_THROW(this -> CreateVector(2));
 }
 
 TYPED_TEST(TestTVector, cant_create_too_large_vector)
 {
   ASSERT_ANY_THROW(this -> CreateVector(MAX_VECTOR_SIZE + 1));
-  
 }
 
 TYPED_TEST(TestTVector, throws_when_create_vector_with_negative_length)
 {
   ASSERT_ANY_THROW(this->CreateVector(-5));
-
 }
 
 TYPED_TEST(TestTVector, can_create_copied_vector)
@@ -85,18 +81,18 @@ TYPED_TEST(TestTVector, can_create_copied_vector)
 TYPED_TEST(TestTVector, copied_vector_is_equal_to_source_one)
 {
 	this->CreateVector(5);
-	EXPECT_EQ(*(this-> vect), *(this->v1));
+	EXPECT_EQ(*(this-> vect1), *(this->v1));
 }
 
 TYPED_TEST(TestTVector, copied_vector_has_its_own_memory)
 {
 	this->CreateVector(5);
-	EXPECT_NE(this->vect, this->v1);
+	EXPECT_NE(this->vect1, this->v1);
 }
 
 TYPED_TEST(TestTVector, can_get_size)
 {
-  EXPECT_EQ(5, this->v1->size());
+	EXPECT_EQ(5, (this->v1->size()));
 }
 
 TYPED_TEST(TestTVector, can_set_and_get_element)
@@ -143,7 +139,7 @@ TYPED_TEST(TestTVector, can_assign_vectors_of_different_size)
 TYPED_TEST(TestTVector, compare_equal_vectors_return_true)
 {
 	this->CreateVector(5);
-	EXPECT_TRUE(*(this->vect) == *(this->v1));
+	EXPECT_TRUE(*(this->vect1) == *(this->v1));
 }
 
 TYPED_TEST(TestTVector, compare_vector_with_itself_return_true)
